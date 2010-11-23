@@ -317,7 +317,7 @@ class Thumbnify extends Controller
 			}
 			
 			// generate watermarked file
-			if (!is_null($arrWatermark))
+			if (!is_null($arrWatermark) && file_exists(TL_ROOT . '/' . $arrWatermark['file']))
 			{
 				if (!$arrWatermark['location'])
 				{
@@ -336,6 +336,7 @@ class Thumbnify extends Controller
 						'composite',
 						'-gravity', $arrWatermark['location'],
 						TL_ROOT . '/' . $arrWatermark['file'],
+						'-type', 'TrueColorMatte',
 						TL_ROOT . '/' . $strFile,
 						TL_ROOT . '/' . $strTarget))
 					{
