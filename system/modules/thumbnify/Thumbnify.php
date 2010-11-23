@@ -174,6 +174,34 @@ class Thumbnify extends Controller
 					}
 				}
 				
+				// from other image formats
+				elseif (preg_match('#^image/#', $strMime))
+				{
+					if (!$strTarget)
+					{
+						$strTarget = sprintf('system/html/image-%s-%s.jpg', $objFile->filename, substr(md5($intWidth . '-' . $intHeight . '-' . $objFile->value . '-' . $objFile->mtime), 0, 8));
+					}
+					
+					// generate if file does not exists or file is outdated
+					if (!file_exists(TL_ROOT . '/' . $strTarget) || $objFile->mtime > filemtime(TL_ROOT . '/' . $strTarget))
+					{
+						if ($this->executeProc(
+							'convert',
+							TL_ROOT . '/' . $objFile->value,
+							'-resize', '3000x3000>',
+							TL_ROOT . '/' . $strTarget))
+						{
+							return $this->getImage($strTarget, $intWidth, $intHeight, 'box', $strTarget);
+						}
+					}
+					
+					// file exists and is up to date
+					else
+					{
+						return $strTarget;
+					}
+				}
+				
 				// from a video file
 				elseif (preg_match('#^video/#', $strMime))
 				{
