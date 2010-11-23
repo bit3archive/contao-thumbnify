@@ -179,7 +179,7 @@ class Thumbnify extends Controller
 				{
 					if (!$strTarget)
 					{
-						$strTarget = sprintf('system/html/image-%s-%s.jpg', $objFile->filename, substr(md5($intWidth . '-' . $intHeight . '-' . $objFile->value . '-' . $objFile->mtime), 0, 8));
+						$strTarget = sprintf('system/html/image-%s-%s.png', $objFile->filename, substr(md5($intWidth . '-' . $intHeight . '-' . $objFile->value . '-' . $objFile->mtime), 0, 8));
 					}
 					
 					// generate if file does not exists or file is outdated
