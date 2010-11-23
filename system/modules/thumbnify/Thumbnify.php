@@ -197,7 +197,7 @@ class Thumbnify extends Controller
 							'-ss', '1',
 							'-nosound',
 							'-frames', '1',
-							'-vo', 'jpeg:outdir=' . $strTemp,
+							'-vo', 'jpeg:outdir=' . TL_ROOT . '/' . $strTemp,
 							TL_ROOT . '/' . $objFile->value
 							))
 						{
