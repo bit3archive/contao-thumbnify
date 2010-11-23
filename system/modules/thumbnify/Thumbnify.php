@@ -363,7 +363,7 @@ class Thumbnify extends Controller
 	 * @arg mixed...
 	 * @return boolean
 	 */
-	public function executeProc()
+	protected function executeProc()
 	{
 		// proc args
 		$arrArgs = func_get_args();
