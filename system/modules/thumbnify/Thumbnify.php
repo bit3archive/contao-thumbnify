@@ -128,7 +128,7 @@ class Thumbnify extends Controller
 	 * @param string
 	 * @return string
 	 */
-	public function getThumb($strFile, $intWidth, $intHeight, $strTarget = null)
+	public function getThumb($strFile, $intWidth, $intHeight, $strMode = 'box', $strTarget = null)
 	{
 		if (file_exists(TL_ROOT . '/' . $strFile))
 		{
@@ -137,7 +137,7 @@ class Thumbnify extends Controller
 			// from image
 			if ($objFile->isGdImage)
 			{
-				return $this->getImage($objFile->value, $intWidth, $intHeight, 'box', $strTarget);
+				return $this->getImage($objFile->value, $intWidth, $intHeight, $strMode, $strTarget);
 			}
 			
 			// generate by mime type
@@ -198,7 +198,7 @@ class Thumbnify extends Controller
 							'-resize', '3000x3000>',
 							TL_ROOT . '/' . $strTarget))
 						{
-							return $this->getImage($strTarget, $intWidth, $intHeight, 'box', $strTarget);
+							return $this->getImage($strTarget, $intWidth, $intHeight, $strMode, $strTarget);
 						}
 					}
 					
@@ -237,7 +237,7 @@ class Thumbnify extends Controller
 							))
 						{
 							// generate thumb
-							$strTarget = $this->getImage($strTemp . '/00000001.jpg', $intWidth, $intHeight, 'box', $strTarget);
+							$strTarget = $this->getImage($strTemp . '/00000001.jpg', $intWidth, $intHeight, $strMode, $strTarget);
 							
 							// delete temporary files
 							unlink(TL_ROOT . '/' . $strTemp . '/00000001.jpg');
