@@ -143,35 +143,13 @@ class Thumbnify extends Controller
 			// generate by mime type
 			else
 			{
-				if (function_exists('finfo_file'))
+				$strMime = $objFile->mime;
+				
+				if ($strMime == 'application/octet-stream' && function_exists('finfo_file'))
 				{
 					$f = finfo_open();
 					$strMime = finfo_file($f, TL_ROOT . '/' . $objFile->value, FILEINFO_MIME);
 					finfo_close($f);
-				}
-				else if (function_exists('mime_content_type'))
-				{
-					$strMime = mime_content_type(TL_ROOT . '/' . $objFile->value);
-				}
-				else
-				{
-					$strMime = $objFile->mime;
-				}
-				
-				if (isset($GLOBALS['TL_HOOKS']['getMimeType']) && is_array($GLOBALS['TL_HOOKS']['getMimeType']))
-				{
-					foreach ($GLOBALS['TL_HOOKS']['getMimeType'] as $callback)
-					{
-						$strClass = $callback[0];
-						$strMethod = $callback[1];
-						$this->import($strClass);
-						$strTemp = $this->$strClass->$strMethod($objFile, $strMime);
-						if ($strTemp)
-						{
-							$strMime = $strTemp;
-							break;
-						}
-					}
 				}
 				
 				// from pdf
