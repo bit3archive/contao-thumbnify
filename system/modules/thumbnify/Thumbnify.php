@@ -158,6 +158,22 @@ class Thumbnify extends Controller
 					$strMime = $objFile->mime;
 				}
 				
+				if (isset($GLOBALS['TL_HOOKS']['getMimeType']) && is_array($GLOBALS['TL_HOOKS']['getMimeType']))
+				{
+					foreach ($GLOBALS['TL_HOOKS']['getMimeType'] as $callback)
+					{
+						$strClass = $callback[0];
+						$strMethod = $callback[1];
+						$this->import($strClass);
+						$strTemp = $this->$strClass->$strMethod($objFile, $strMime);
+						if ($strTemp)
+						{
+							$strMime = $strTemp;
+							break;
+						}
+					}
+				}
+				
 				// from pdf
 				if ($strMime == 'application/pdf')
 				{
