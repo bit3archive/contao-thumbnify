@@ -117,7 +117,35 @@ class Thumbnify extends Controller
 			'location' => $strLocation
 		);
 	}
+	
+	
+	/**
+	 * Test if thumbnail generation is supported for the file.
+	 * 
+	 * @param string $strFile
+	 * @return bool
+	 */
+	public function isThumbSupported($strFile)
+	{
+		if (file_exists(TL_ROOT . '/' . $strFile))
+		{
+			$objFile = new File($strFile);
+			return $this->isThumbSupportedForMime($objFile->mime);
+		}
+		return false;
+	}
 
+	
+	/**
+	 * Test if thumbnail generation is supported for the file.
+	 * 
+	 * @param string $strMime
+	 * @return bool
+	 */
+	public function isThumbSupportedForMime($strMime)
+	{
+		return (preg_match('#^(image|video)/.*|application/pdf$#', $strMime)) ? true : false;
+	}
 
 	/**
 	 * Generate a thumbnail
