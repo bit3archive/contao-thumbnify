@@ -319,12 +319,12 @@ class Thumbnify extends Controller
 	 * @param string
 	 * @return string
 	 */
-	public function getWatermarkedThumb($strFile, $intWidth, $intHeight, $strTarget = null)
+	public function getWatermarkedThumb($strFile, $intWidth, $intHeight, $strMode = 'box', $strTarget = null)
 	{
 		if (file_exists(TL_ROOT . '/' . $strFile))
 		{
 			// generate a thumb
-			$strThumb = $this->getThumb($strFile, $intWidth, $intHeight, $strTarget);
+			$strThumb = $this->getThumb($strFile, $intWidth, $intHeight, $strMode, $strTarget);
 
 			if ($strThumb)
 			{
