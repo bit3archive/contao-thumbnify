@@ -59,7 +59,7 @@ class Thumbnify extends Controller
 		case 'defaultWatermarkLocation':
 			return $this->strDefaultWatermarkLocation;
 		}
-		return parent::__get($k);
+		return $this->$k;
 	}
 	
 	
@@ -85,7 +85,7 @@ class Thumbnify extends Controller
 			break;
 			
 		default:
-			parent::__set($k, $v);
+			$this->$k = $v;
 		}
 	}
 	
