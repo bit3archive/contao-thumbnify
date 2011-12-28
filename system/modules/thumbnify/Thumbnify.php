@@ -1,8 +1,12 @@
 <?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
+ * Thumbnify
+ * Copyright (C) 2010,2011 InfinitySoft <http://www.infinitysoft.de>
+ *
+ * Extension for:
  * Contao Open Source CMS
- * Copyright (C) 2005-2010 Leo Feyer
+ * Copyright (C) 2005-2011 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,10 +25,10 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  InfinitySoft 2010
+ * @copyright  2010,2011 InfinitySoft <http://www.infinitysoft.de>
  * @author     Tristan Lins <tristan.lins@infinitysoft.de>
  * @package    Thumbnify
- * @license    http://opensource.org/licenses/lgpl-3.0.html
+ * @license    LGPL
  */
 
 
@@ -32,9 +36,10 @@
  * Class Thumbnify
  *
  * Thumbnail generation class.
- * @copyright  InfinitySoft 2010
- * @author     Tristan Lins <tristan.lins@infinitysoft.de>
- * @package    Thumbnify
+ *
+  * @copyright  2010,2011 InfinitySoft <http://www.infinitysoft.de>
+  * @author     Tristan Lins <tristan.lins@infinitysoft.de>
+  * @package    Thumbnify
  */
 class Thumbnify extends Controller
 {
@@ -190,18 +195,56 @@ class Thumbnify extends Controller
 					{
 						$strTarget = sprintf('system/html/thumb-pdf-%s-%s.jpg', $objFile->filename, substr(md5($intWidth . '-' . $intHeight . '-' . $objFile->value . '-' . $objFile->mtime), 0, 8));
 					}
-					
+
 					// generate if file does not exists or file is outdated
 					if (!file_exists(TL_ROOT . '/' . $strTarget) || $objFile->mtime > filemtime(TL_ROOT . '/' . $strTarget))
 					{
-						if ($this->executeProc(
-							'convert',
-							TL_ROOT . '/' . $objFile->value . '[0]',
-							'-scale',
-							$intWidth . 'x' . $intHeight,
-							TL_ROOT . '/' . $strTarget))
+						switch ($GLOBALS['TL_CONFIG']['thumbnify_pdf_mode'])
 						{
-							return $strTarget;
+							case 'pdftoppm':
+								if ($this->executeProc(
+										'pdftoppm',
+										'-singlefile',
+										'-r', 96,
+										'-png',
+										'-aa', 'yes',
+										'-aaVector', 'yes',
+										TL_ROOT . '/' . $objFile->value,
+										TL_ROOT . '/' . preg_replace('#\.jpg$#', '', $strTarget))
+									&& is_file(TL_ROOT . '/' . preg_replace('#\.jpg$#', '.png', $strTarget))
+									&& $this->executeProc(
+										'convert',
+										'-resize', $intWidth . 'x' . $intHeight . '>',
+										'-quality', '90',
+										'-unsharp', '1.5x1.2+1+0.1',
+										TL_ROOT . '/' . preg_replace('#\.jpg$#', '.png', $strTarget),
+										TL_ROOT . '/' . $strTarget))
+								{
+									return $strTarget;
+								}
+								break;
+
+							default:
+							case 'convert':
+								if (!$strTarget)
+								{
+									$strTarget = sprintf('system/html/thumb-pdf-%s-%s.jpg', $objFile->filename, substr(md5($intWidth . '-' . $intHeight . '-' . $objFile->value . '-' . $objFile->mtime), 0, 8));
+								}
+
+								if ($this->executeProc(
+									'convert',
+									'-colorspace', 'RGB',
+									'-resize', $intWidth . 'x' . $intHeight,
+									'-interlace', 'none',
+									'-density', '96',
+									'-quality', '90',
+									'-unsharp', '1.5x1.2+1+0.1',
+									TL_ROOT . '/' . $objFile->value . '[0]',
+									TL_ROOT . '/' . $strTarget))
+								{
+									return $strTarget;
+								}
+								break;
 						}
 					}
 					

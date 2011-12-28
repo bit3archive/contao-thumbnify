@@ -1,8 +1,12 @@
 <?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
+ * Thumbnify
+ * Copyright (C) 2010,2011 InfinitySoft <http://www.infinitysoft.de>
+ *
+ * Extension for:
  * Contao Open Source CMS
- * Copyright (C) 2005-2010 Leo Feyer
+ * Copyright (C) 2005-2011 Leo Feyer
  *
  * Formerly known as TYPOlight Open Source CMS.
  *
@@ -21,28 +25,21 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  InfinitySoft 2010
+ * @copyright  2010,2011 InfinitySoft <http://www.infinitysoft.de>
  * @author     Tristan Lins <tristan.lins@infinitysoft.de>
  * @package    Thumbnify
- * @license    http://opensource.org/licenses/lgpl-3.0.html
+ * @license    LGPL
  */
 
 
 /**
- * Constants
+ * System configuration
  */
-define('WATERMARK_LEFT_TOP', 'NorthWest');
-define('WATERMARK_TOP', 'North');
-define('WATERMARK_RIGHT_TOP', 'NorthEast');
-define('WATERMARK_LEFT', 'West');
-define('WATERMARK_CENTER', 'Center');
-define('WATERMARK_RIGHT', 'East');
-define('WATERMARK_LEFT_BOTTOM', 'SouthWest');
-define('WATERMARK_BOTTOM', 'South');
-define('WATERMARK_RIGHT_BOTTOM', 'SouthEast');
+$GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{thumbnify_legend:hide},thumbnify_pdf_mode';
 
-
-/**
- * Settings
- */
-$GLOBALS['TL_CONFIG']['thumbnify_pdf_mode'] = 'convert';
+$GLOBALS['TL_DCA']['tl_settings']['fields']['thumbnify_pdf_mode'] = array
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['thumbnify_pdf_mode'],
+	'inputType'               => 'select',
+	'options'                 => array('convert', 'pdftoppm')
+);
